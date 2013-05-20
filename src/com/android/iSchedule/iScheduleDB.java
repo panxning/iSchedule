@@ -259,8 +259,16 @@ public class iScheduleDB extends SQLiteOpenHelper {
 		
 		return list;
 	}
-	// update operation
-	// each search operation
 	
+	public Mode getModeById(long mid){
+		Mode mode = new Mode(1, 0);
+		return mode;
+	}
+
+	public Mode getModeByEventId(long eid){
+		Mode mode = new Mode(1, 0);
+		return mode;
+		//···todo
+	}
 	
 }

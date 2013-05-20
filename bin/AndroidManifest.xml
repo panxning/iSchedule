@@ -13,23 +13,53 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <receiver android:name="CallAlarm">
+          	</receiver>
+        
         <activity
             android:name="com.android.iSchedule.Main"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
+        </activity>
+        
+        <activity 
+            android:name="com.android.iSchedule.AddEvent" 
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         
         <activity 
-            android:name="com.android.iSchedule.AddEvent" >
+            android:name="com.android.iSchedule.AddMode" 
+            android:label="@string/app_name" >
         </activity>
         
         <activity 
-            android:name="com.android.iSchedule.AddMode" >
+            android:name="com.android.iSchedule.DialyReceiver" 
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        
+        <activity 
+            android:name="com.android.iSchedule.ModifyReceiver" 
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        
+        
     </application>
 
 </manifest>

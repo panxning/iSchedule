@@ -10,7 +10,11 @@ import java.util.Map;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +24,10 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 public class Main extends Activity {
+    //
+	AlarmManager dialy_alarm;
+	public int DEFAULT_VOLUME;
+	public int DEFAULT_VIBRATE;
 	
 	public ImageButton menuButton;
 	public Button datePickButton;
@@ -66,10 +74,15 @@ public class Main extends Activity {
 		
 		// eventList.setAdapter(adapter);
 		
-
-	
+		
 		updateList();
 		
+		//闹钟管理
+		dialy_alarm  = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(this, DialyReceiver.class);
+		PendingIntent senderPI = PendingIntent.getBroadcast(Main.this, 0, intent, 0);
+    	dialy_alarm.setRepeating(AlarmManager.RTC_WAKEUP,  getTime(), 24 * 60 * 60 * 1000, senderPI);
+		 //
 	}
 	
 	public OnClickListener addOnClick = new OnClickListener() {
@@ -113,6 +126,14 @@ public class Main extends Activity {
 		
 		((SimpleAdapter) eventList.getAdapter()).notifyDataSetChanged();
 	}
+	private long getTime() {
+    	Date dateNow = new Date(System.currentTimeMillis());
+    	long hour = 24 - dateNow.getHours();
+    	long min = 0 - dateNow.getMinutes();
+    	long second = dateNow.getSeconds();
+    	return dateNow.getTime() + (hour*60 + min)*60*1000 - second*1000;
+    }
+	
 }
 
 
