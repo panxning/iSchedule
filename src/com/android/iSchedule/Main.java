@@ -25,9 +25,7 @@ import android.widget.SimpleAdapter;
 
 public class Main extends Activity {
     //
-	AlarmManager dialy_alarm;
-	public int DEFAULT_VOLUME;
-	public int DEFAULT_VIBRATE;
+	AlarmManager diary_alarm;
 	
 	public ImageButton menuButton;
 	public Button datePickButton;
@@ -35,7 +33,7 @@ public class Main extends Activity {
 	public ListView eventList;
 	public List<Map<String, String>> events = new ArrayList<Map<String,String>>();
 	iScheduleDB helper = new iScheduleDB(this);
-	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	Date curDate = new Date(System.currentTimeMillis());
 	String curDateString = formatter.format(curDate);
 	
@@ -43,6 +41,9 @@ public class Main extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		String tag = "Main";
+		
 		
 		menuButton = (ImageButton) this.findViewById(R.id.Menu);
 		datePickButton = (Button) this.findViewById(R.id.datePick);
@@ -58,31 +59,44 @@ public class Main extends Activity {
 		// ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, item); 
 		
 		List<Mode> modes = new ArrayList<Mode>();
-		modes = helper.getAllModes();
+	    modes = helper.getAllModes();
+	    
 		datePickButton.setText(curDateString);
 		
 		addEventButton.setOnClickListener(addOnClick);
-
-		Event e = new Event("hehe", "hehe", "hehe", curDate, curDate, curDate, curDate);
-
-		helper.insert(e);
 		
-		Mode m = new Mode(1, 2);
+		
+		Date curDatePls50sDate = curDate;
+		java.util.Date curDate2 = new java.util.Date(curDate.getTime());
+		java.util.Date curDatePls50sDate2 = curDate2;
+		curDatePls50sDate2.setSeconds(curDate2.getSeconds() + 50);
+		curDatePls50sDate = new java.sql.Date(curDatePls50sDate2.getTime());
+		
+		Date curDatePls60sDate = curDate;
+		java.util.Date curDate3 = new java.util.Date(curDate.getTime());
+		java.util.Date curDatePls60sDate2 = curDate3;
+		curDatePls60sDate2.setSeconds(curDate3.getSeconds() + 60);
+		curDatePls60sDate = new java.sql.Date(curDatePls60sDate2.getTime());
+		
+		curDateString = formatter.format(curDate);
+		Log.i(tag, curDateString);
+		Event e = new Event("hehe", "hehe", "hehe", curDate, curDate, curDatePls50sDate, curDatePls60sDate);
+		
+		helper.insert(e);
+		Mode m = new Mode("Mode", 0, 0);
 		helper.insert(m);
 		helper.insert(e, m);
-		helper.deleteModify(e, m);
-		
+
 		// eventList.setAdapter(adapter);
-		
-		
 		updateList();
 		
 		//闹钟管理
-		dialy_alarm  = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-		Intent intent = new Intent(this, DialyReceiver.class);
-		PendingIntent senderPI = PendingIntent.getBroadcast(Main.this, 0, intent, 0);
-    	dialy_alarm.setRepeating(AlarmManager.RTC_WAKEUP,  getTime(), 24 * 60 * 60 * 1000, senderPI);
-		 //
+		diary_alarm  = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(this, DiaryReceiver.class);
+		PendingIntent senderPI = PendingIntent.getBroadcast(this, 0, intent, 0);
+    	diary_alarm.setRepeating(AlarmManager.RTC_WAKEUP,  getTime(), //24 * 60 * 60
+    			5 * 100 * 1000, senderPI);
+		 
 	}
 	
 	public OnClickListener addOnClick = new OnClickListener() {
@@ -128,10 +142,11 @@ public class Main extends Activity {
 	}
 	private long getTime() {
     	Date dateNow = new Date(System.currentTimeMillis());
-    	long hour = 24 - dateNow.getHours();
-    	long min = 0 - dateNow.getMinutes();
-    	long second = dateNow.getSeconds();
-    	return dateNow.getTime() + (hour*60 + min)*60*1000 - second*1000;
+    	java.util.Date dateNow2 = new java.util.Date (dateNow.getTime());
+    	long hour = 24 - dateNow2.getHours();
+    	long min = 0 - dateNow2.getMinutes();
+    	long second = dateNow2.getSeconds();
+    	return (dateNow2.getTime() + (hour*60 + min)*60*1000 - second*1000);
     }
 	
 }
